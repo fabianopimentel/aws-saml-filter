@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name        aws-saml-filter
-// @namespace   Violentmonkey Scripts
+// @namespace   AWS Scripts
 // @match       https://signin.aws.amazon.com/saml
 // @grant       none
-// @version     1.0
+// @version     1.1
 // @author      -
 // @description 1/24/2024, 9:35:35 AM
 // ==/UserScript==
@@ -61,26 +61,18 @@ $("#searchbox > input").keydown(function (e) {
       "fieldset > div.saml-account:visible > div.saml-account > div.saml-role:visible"
     );
     event.preventDefault();
+
     if (visibleRoles.length === 1) {
       $("form#saml_form").submit();
+    } else {
+      SelectFirst();
     }
   }
 });
 
 $("#searchbox > input").keyup(function (e) {
   if (e.which === 40) {
-    $(
-      "fieldset > div.saml-account:visible > div.saml-account > div.saml-role:visible"
-    )
-      .first()
-      .children("input")
-      .focus();
-    $(
-      "fieldset > div.saml-account:visible > div.saml-account > div.saml-role:visible"
-    )
-      .first()
-      .children("input")
-      .prop("checked", true);
+    SelectFirst()
     return;
   }
 
@@ -187,3 +179,19 @@ window.addEventListener(
   },
   false
 );
+
+function SelectFirst() {
+  $(
+    "fieldset > div.saml-account:visible > div.saml-account > div.saml-role:visible"
+  )
+    .first()
+    .children("input")
+    .focus();
+  $(
+    "fieldset > div.saml-account:visible > div.saml-account > div.saml-role:visible"
+  )
+    .first()
+    .children("input")
+    .prop("checked", true);
+}
+
