@@ -1,12 +1,13 @@
 // ==UserScript==
-// @name        aws-saml-filter
-// @namespace   AWS Scripts
-// @match       https://signin.aws.amazon.com/saml
-// @grant       none
-// @version     1.1
-// @author      -
-// @description 1/24/2024, 9:35:35 AM
+// @name         AWS SAML Role Filter
+// @namespace    http://tampermonkey.net/
+// @version      1.1
+// @description  Allows users to search and select SAML roles during the AWS Console login process.
+// @author       Fabiano Pimentel
+// @match        https://signin.aws.amazon.com/saml
+// @icon         https://www.google.com/s2/favicons?domain=aws.amazon.com
 // ==/UserScript==
+
 
 window.clearSearch = function () {
   $("#searchbox > input").val("");
