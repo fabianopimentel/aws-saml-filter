@@ -41,7 +41,7 @@
     banner.style.fontSize = '12px';
     banner.style.cursor = "pointer";
     banner.style.fontFamily = '"Amazon Ember", "Helvetica Neue", Arial, sans-serif';
-    banner.setAttribute("title", "Copy account");
+    banner.setAttribute("title", "Copy");
 
     banner.addEventListener("click", (e) => {
       e.preventDefault()
