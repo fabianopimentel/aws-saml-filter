@@ -27,15 +27,29 @@
     return accountInfo;
   }
 
+  function handleBannerClick(accountName) {
+    window.navigator.clipboard.writeText(accountName)
+  }
+
   function createBanner(accountName) {
     const banner = document.createElement('div');
     banner.textContent = `${accountName}`;
-    banner.style.backgroundColor = 'rgb(184, 58, 96)';
+        banner.style.backgroundColor = accountName.includes("-sandbox") ? "#52c120" : "#d02727"; // green for sandbox and red for production envs
+    banner.style.borderBottom = "1px solid #424650"; // aws default border color
+    banner.style.fontWeight = "600";
     banner.style.color = 'white';
     banner.style.textAlign = 'center';
     banner.style.padding = '10px';
-    banner.style.fontSize = '16px';
+    banner.style.fontSize = '12px';
+    banner.style.cursor = "pointer";
     banner.style.fontFamily = '"Amazon Ember", "Helvetica Neue", Arial, sans-serif';
+    banner.setAttribute("title", "Copy");
+
+    banner.addEventListener("click", (e) => {
+      e.preventDefault()
+      handleBannerClick(accountName)
+    })
+
     return banner;
   }
 
