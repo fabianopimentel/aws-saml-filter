@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AWS Account Banner
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Displays a banner with AWS account name making it easier to identify the account you are logged in to.
 // @author       Fabiano Pimentel
 // @match        https://*.console.aws.amazon.com/*
@@ -10,6 +10,8 @@
 
 (function () {
   'use strict';
+
+  let initialized = false;
 
   function getAccountName() {
     const accountInfoElement = document.querySelector('[data-testid="awsc-account-info-tile"] span');
@@ -47,13 +49,16 @@
   }
 
   async function init() {
+    if (initialized) return;
+    initialized = true;
+
     let accountName;
     let attempts = 0;
     while (attempts < 10) {
       accountName = getAccountName();
       if (accountName !== 'Ops!') break;
       attempts++;
-      await new Promise(resolve => setTimeout(resolve, 500)); // Wait for 500ms before trying again
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
 
     if (accountName === 'Ops!') {
