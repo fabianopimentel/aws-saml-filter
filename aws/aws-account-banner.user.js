@@ -51,7 +51,6 @@
     return banner;
   }
 
-
   function insertBanner(banner) {
     const targetElement = document.querySelector('#h');
     if (targetElement) {
