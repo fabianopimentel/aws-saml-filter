@@ -32,7 +32,7 @@
   function createBanner(accountName) {
     const banner = document.createElement('div');
     banner.textContent = `${accountName}`;
-    banner.style.backgroundColor = "#161d26"; // aws default background color
+        banner.style.backgroundColor = accountName.includes("-sandbox") ? "#52c120" : "#d02727"; // green for sandbox and red for production envs
     banner.style.borderBottom = "1px solid #424650"; // aws default border color
     banner.style.fontWeight = "600";
     banner.style.color = 'white';
