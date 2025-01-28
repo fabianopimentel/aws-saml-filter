@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AWS Account Banner
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Displays a banner with AWS account name making it easier to identify the account you are logged in to.
 // @author       Fabiano Pimentel
 // @match        https://*.console.aws.amazon.com/*
