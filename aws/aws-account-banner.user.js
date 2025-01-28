@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AWS Account Banner
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Displays a banner with AWS account name making it easier to identify the account you are logged in to.
 // @author       Fabiano Pimentel
 // @match        https://*.console.aws.amazon.com/*
@@ -34,13 +34,13 @@
   function createBanner(accountName) {
     const banner = document.createElement('div');
     banner.textContent = `${accountName}`;
-        banner.style.backgroundColor = accountName.includes("-sandbox") ? "#52c120" : "#d02727"; // green for sandbox and red for production envs
-    banner.style.borderBottom = "1px solid #424650"; // aws default border color
+        banner.style.backgroundColor = accountName.includes("-sandbox") ? "#6ba234" : "#eb5381";
+    banner.style.borderBottom = "1px solid #424650";
     banner.style.fontWeight = "600";
     banner.style.color = 'white';
     banner.style.textAlign = 'center';
     banner.style.padding = '10px';
-    banner.style.fontSize = '12px';
+    banner.style.fontSize = '16px';
     banner.style.cursor = "pointer";
     banner.style.fontFamily = '"Amazon Ember", "Helvetica Neue", Arial, sans-serif';
     banner.setAttribute("title", "Copy");
