@@ -25,17 +25,32 @@
     return accountInfo;
   }
 
+  function handleBannerClick(accountName) {
+    window.navigator.clipboard.writeText(accountName)
+  }
+
   function createBanner(accountName) {
     const banner = document.createElement('div');
     banner.textContent = `${accountName}`;
-    banner.style.backgroundColor = 'rgb(184, 58, 96)';
+    banner.style.backgroundColor = "#161d26"; // aws default background color
+    banner.style.borderBottom = "1px solid #424650"; // aws default border color
+    banner.style.fontWeight = "600";
     banner.style.color = 'white';
     banner.style.textAlign = 'center';
     banner.style.padding = '10px';
-    banner.style.fontSize = '16px';
+    banner.style.fontSize = '12px';
+    banner.style.cursor = "pointer";
     banner.style.fontFamily = '"Amazon Ember", "Helvetica Neue", Arial, sans-serif';
+    banner.setAttribute("title", "Copiar");
+
+    banner.addEventListener("click", (e) => {
+      e.preventDefault()
+      handleBannerClick(accountName)
+    })
+
     return banner;
   }
+
 
   function insertBanner(banner) {
     const targetElement = document.querySelector('#h');
