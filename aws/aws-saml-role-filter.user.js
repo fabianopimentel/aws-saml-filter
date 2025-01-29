@@ -8,7 +8,6 @@
 // @icon         https://www.google.com/s2/favicons?domain=aws.amazon.com
 // ==/UserScript==
 
-
 window.clearSearch = function () {
   $("#searchbox > input").val("");
   $("#searchbox > input").focus();
