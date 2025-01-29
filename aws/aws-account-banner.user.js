@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AWS Account Banner
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  Displays a banner with AWS account name making it easier to identify the account you are logged in to.
 // @author       Fabiano Pimentel
 // @match        https://*.console.aws.amazon.com/*
@@ -11,84 +11,106 @@
 (function () {
   'use strict';
 
-  // Flag to prevent multiple banners
+  const DEBUG_MODE = false; // Set to false to disable debug logs
+  let scriptInitialized = false;
   let bannerInserted = false;
 
-  /**
-   * Fetches the AWS account name from the page.
-   * @returns {string|null} The account name or null if not found.
-   */
-  function getAccountName() {
-    const accountInfoElement = document.querySelector('[data-testid="awsc-account-info-tile"] span');
-    if (!accountInfoElement) return null;
-
-    let accountName = accountInfoElement.textContent.trim();
-    return accountName.replace(/\(([^)]+)\)/, (_, p1) => `(${p1.replace(/-/g, '')})`);
+  function debugLog(message) {
+    if (DEBUG_MODE) console.log(`[AWS Account Banner]: ${message}`);
   }
 
-  /**
-   * Creates a banner element with the account name.
-   * @param {string} accountName - The AWS account name.
-   * @returns {HTMLElement} The banner element.
-   */
-  function createBanner(accountName) {
+  function getAccountName() {
+    const accountInfoElement = document.querySelector('[data-testid="awsc-account-info-tile"] span');
+    if (!accountInfoElement) {
+      debugLog('Account info not found.');
+      return null;
+    }
+
+    let accountText = accountInfoElement.textContent.trim();
+    debugLog(`Raw account text: "${accountText}"`);
+
+    const accountMatch = accountText.match(/(.*?)\s*\(([\d-]+)\)/); // Extract alias & ID
+    if (!accountMatch) return null;
+
+    return {
+      alias: accountMatch[1].trim(),
+      id: accountMatch[2].replace(/-/g, ''), // Remove dashes from ID
+    };
+  }
+
+  function copyToClipboard(text, label) {
+    navigator.clipboard.writeText(text).then(() => {
+      debugLog(`Copied ${label} to clipboard: ${text}`);
+    }).catch(err => {
+      debugLog(`Clipboard copy failed: ${err}`);
+    });
+  }
+
+  function createBanner(account) {
     const banner = document.createElement('div');
-    banner.textContent = `${accountName}`;
-    banner.style.backgroundColor = accountName.includes('-sandbox') ? '#6ba234' : '#eb5381';
+    banner.style.backgroundColor = /-sandbox|-dev|-development/.test(account.alias) ? 'rgb(42, 94, 219)' : 'rgb(166, 45, 38)';
     banner.style.borderBottom = '1px solid #424650';
     banner.style.fontWeight = '600';
     banner.style.color = 'white';
     banner.style.textAlign = 'center';
     banner.style.padding = '10px';
     banner.style.fontSize = '16px';
-    banner.style.cursor = 'pointer';
     banner.style.fontFamily = '"Amazon Ember", "Helvetica Neue", Arial, sans-serif';
-    banner.setAttribute('title', 'Copy');
 
-    // Copy account name to clipboard on click
-    banner.addEventListener('click', () => {
-      navigator.clipboard.writeText(accountName);
-    });
+    // Alias Span
+    const aliasSpan = document.createElement('span');
+    aliasSpan.textContent = account.alias;
+    aliasSpan.style.cursor = 'pointer';
+    aliasSpan.style.marginRight = '8px';
+    aliasSpan.title = 'Click to copy alias';
+    aliasSpan.addEventListener('click', () => copyToClipboard(account.alias, 'Alias'));
+
+    // ID Span
+    const idSpan = document.createElement('span');
+    idSpan.textContent = `(${account.id})`;
+    idSpan.style.cursor = 'pointer';
+    idSpan.style.fontWeight = 'bold';
+    idSpan.title = 'Click to copy account ID';
+    idSpan.addEventListener('click', () => copyToClipboard(account.id, 'Account ID'));
+
+    // Append elements
+    banner.appendChild(aliasSpan);
+    banner.appendChild(idSpan);
 
     return banner;
   }
 
-  /**
-   * Inserts the banner into the DOM.
-   * @param {HTMLElement} banner - The banner element.
-   */
   function insertBanner(banner) {
     const targetElement = document.querySelector('#h');
     if (targetElement) {
       targetElement.insertBefore(banner, targetElement.firstChild);
       bannerInserted = true;
+      debugLog('Banner inserted successfully.');
     } else {
-      console.warn('Target element #h not found. Banner not inserted.');
+      debugLog('Target element #h not found. Banner not inserted.');
     }
   }
 
-  /**
-   * Observes changes in the DOM and inserts the banner when the account info is found.
-   */
   function observeDOMChanges() {
     const observer = new MutationObserver(() => {
-      if (bannerInserted) return; // Avoid duplicate banners
+      if (bannerInserted) return;
 
-      const accountName = getAccountName();
-      if (accountName) {
-        const banner = createBanner(accountName);
+      const account = getAccountName();
+      if (account) {
+        const banner = createBanner(account);
         insertBanner(banner);
-        observer.disconnect(); // Stop observing once the banner is inserted
+        observer.disconnect();
       }
     });
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 
   function init() {
+    if (scriptInitialized) return;
+    scriptInitialized = true;
+
+    debugLog('Initializing script...');
     observeDOMChanges();
   }
 
