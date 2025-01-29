@@ -48,7 +48,7 @@
 
   function createBanner(account) {
     const banner = document.createElement('div');
-    banner.style.backgroundColor = account.alias.includes('-sandbox') ? 'rgb(42, 94, 219)' : 'rgb(166, 45, 38)';
+    banner.style.backgroundColor = /-sandbox|-dev|-development/.test(account.alias) ? 'rgb(42, 94, 219)' : 'rgb(166, 45, 38)';
     banner.style.borderBottom = '1px solid #424650';
     banner.style.fontWeight = '600';
     banner.style.color = 'white';

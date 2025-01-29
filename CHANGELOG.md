@@ -4,6 +4,7 @@
 
 - feat: allow copying account alias and account ID separately
 - feat: add `DEBUG_MODE` to enhance the debugging capabilities of the script
+- feat: treat `development` and `dev` accounts as sandbox accounts when determining color
 
 ### Fixed
 
