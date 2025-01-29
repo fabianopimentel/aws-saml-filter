@@ -6,6 +6,9 @@
 // @author       Fabiano Pimentel
 // @match        https://*.console.aws.amazon.com/*
 // @icon         https://www.google.com/s2/favicons?domain=aws.amazon.com
+// @updateURL    https://github.com/fabianopimentel/tampermonkey-scripts/raw/main/aws/aws-account-banner.user.js
+// @downloadURL  https://github.com/fabianopimentel/tampermonkey-scripts/raw/main/aws/aws-account-banner.user.js
+
 // ==/UserScript==
 
 (function () {
